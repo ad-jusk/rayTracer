@@ -12,8 +12,12 @@ void Camera::CalculatImageHeight(double camera_aspect_ratio) {
 	image_height = (image_height < 1) ? 1 : image_height;
 }
 
-void Camera::CalculatViewportWidth(int img_height) {
-	viewport_width = viewport_height * (static_cast<double>(image_width) / img_height);
+void Camera::CalculatViewportWidth() {
+	if (image_height <= 0) {
+		std::cerr << "Image width is < 0!" << std::endl;
+		return;
+	}
+	viewport_width = viewport_height * (static_cast<double>(image_width) / image_height);
 }
 
 void Camera::CalculateViewportVectors() {

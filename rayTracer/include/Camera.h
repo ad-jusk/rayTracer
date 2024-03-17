@@ -8,7 +8,7 @@ class Camera {
 public:
     Camera(int img_width, Vector3 camera_center, double viewport_height, double focal_length);
     void CalculatImageHeight(double camera_aspect_ratio);
-    void CalculatViewportWidth(int img_height);
+    void CalculatViewportWidth();
     void CalculateViewportVectors();
     void CalculateUpperLeftPixelLocation();
 

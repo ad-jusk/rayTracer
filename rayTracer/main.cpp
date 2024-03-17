@@ -8,15 +8,15 @@
 #include "include/Sphere.h"
 
 const double infinity = std::numeric_limits<double>::infinity();
+const Sphere sphere(Point3(0, 0, -1), 0.5);
 
 // Returns ray color
 static Color rayColor(const Ray& r) {
 
-    Sphere sphere(Point3(0, 0, -1), 0.5);
     HitRecord record;
 
     if (sphere.hit(r, 0, infinity, record)) {
-        return Color(1, 0, 0);
+        return 0.5 * (record.normal + Color(1, 1, 1));
     }
 
     Vector3 unitDirection = unit_vector(r.Direction());
@@ -33,12 +33,12 @@ int main() {
 
     Vector3 camera_center = Vector3(0.3f, 0.0f, 0.0f);
     Camera camera(image_width, camera_center, viewport_height, focal_length);
-
     camera.CalculatImageHeight(camera_aspect_ratio);
-    int image_height = camera.getImageHeight();
-    camera.CalculatViewportWidth(image_height);
+    camera.CalculatViewportWidth();
     camera.CalculateViewportVectors();
     camera.CalculateUpperLeftPixelLocation();
+
+    int image_height = camera.getImageHeight();
 
     // OUTPUT IMAGE
     std::ofstream rendered_image("../../../../image.ppm");
