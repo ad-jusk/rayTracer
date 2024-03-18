@@ -58,6 +58,8 @@ void firstExercise() {
     } else {
         std::cout << "Ray did not hit plane" << std::endl;
     }
+
+    // Triangle
     Vector3 vertexA(0, 0, 0);
     Vector3 vertexB(1, 0, 0);
     Vector3 vertexC(0, 1, 0);
@@ -69,22 +71,19 @@ void firstExercise() {
     Triangle triangle(vertexA, normalA, vertexB, normalB, vertexC, normalC);
     bool result;
 
-    // Case 1
-    std::cout << "Test Case 1:" << std::endl;
+    std::cout << "Test triangle intersection Case 1:" << std::endl;
     ray = Ray(Vector3(-1, 0.5, 0), Vector3(1, 0.5, 0));
     result = triangle.hit(ray, 0, infinity, hitRecord);
     std::cout << "Result: " << (result ? "True" : "False") << std::endl;
     std::cout << std::endl;
 
-    // Case 2
-    std::cout << "Test Case 2:" << std::endl;
+    std::cout << "Test triangle intersection Case 2:" << std::endl;
     ray = Ray(Vector3(2, -1, 0), Vector3(2, 2, 0));
     result = triangle.hit(ray, 0, infinity, hitRecord);
     std::cout << "Result: " << (result ? "True" : "False") << std::endl;
     std::cout << std::endl;
 
-    // Case 3
-    std::cout << "Test Case 3:" << std::endl;
+    std::cout << "Test triangle intersection Case 3:" << std::endl;
     ray = Ray(Vector3(0, 0, -1), Vector3(0, 0, 1));
     result = triangle.hit(ray, 0, infinity, hitRecord);
     std::cout << "Result: " << (result ? "True" : "False") << std::endl;
