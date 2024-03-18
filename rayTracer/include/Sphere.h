@@ -8,10 +8,10 @@ public:
     bool hit(const Ray& r, double tmin, double tmax, HitRecord& rec) const override {
 
         Vector3 oc = r.Origin() - center;
-        auto a = dot(r.Direction(), r.Direction());
+        auto a = r.Direction().lengthSquared();
         auto b = 2.0 * dot(oc, r.Direction());
-        auto c = dot(oc, oc) - radius * radius;
-        auto discriminant = b * b - 4 * a * c;
+        auto c = oc.lengthSquared() - radius * radius;
+        auto discriminant = b/2 * b/2 - a * c;
 
         if (discriminant < 0) {
             return false;

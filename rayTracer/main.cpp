@@ -6,25 +6,60 @@
 #include "include/Vector3.h"
 #include "include/Camera.h"
 #include "include/Sphere.h"
+#include "include/Plane.h"
 
 const double infinity = std::numeric_limits<double>::infinity();
 const Sphere sphere(Point3(0, 0, -1), 0.5);
 
-// Returns ray color
-static Color rayColor(const Ray& r) {
-
-    HitRecord record;
-
-    if (sphere.hit(r, 0, infinity, record)) {
-        return 0.5 * (record.normal + Color(1, 1, 1));
-    }
-
-    Vector3 unitDirection = unit_vector(r.Direction());
-    float a = 0.5 * (unitDirection.y + 1.0);
-    return (1.0 - a) * Color(1.0, 1.0, 1.0) + a * Color(0.5, 0.7, 1.0);
-}
+void firstExercise();
+void render();
+Color rayColor(const Ray& r);
 
 int main() {
+
+    firstExercise();
+    // render();
+}
+
+void firstExercise() {
+    
+    std::cout << "##### Exercise 1 #####" << std::endl;
+
+    Vector3 v1(0.f, 3.f, 0.f);
+    Vector3 v2(5.f, 5.f, 0.f);
+
+    std::cout << "Sum of " << v1 << " and " << v2 << ": " << v1 + v2 << std::endl;
+    std::cout << "Angle between " << v1 << " and " << v2 << ": " << v1.angle(v2) << std::endl;
+
+    v1 = Vector3(4.f, 5.f, 1.f);
+    v2 = Vector3(4.f, 1.f, 3.f);
+
+    std::cout << "Cross product of " << v1 << " and " << v2 << ": " << v1.cross(v2) << std::endl;
+    std::cout << "Cross product of cross product:"  << unit_vector(v1.cross(v2)) << std::endl;
+
+    Sphere s(Point3(0.f, 0.f, 0.f), 10);
+    Vector3 rayPoint(0, 0, -20);
+    Ray ray(unit_vector(rayPoint), rayPoint);
+    HitRecord hitRecord;
+
+    if (s.hit(ray, 0, infinity, hitRecord)) {
+        std::cout << "Ray hit sphere in: " << hitRecord.p << std::endl;
+    }
+    else {
+        std::cout << "Ray did not hit sphere" << std::endl;
+    }
+
+    Plane plane(Vector3(0.0f, 1.0f, 1.0f), 0.0f);
+    ray = Ray(rayPoint, Vector3(0, 1, 0));
+
+    if (plane.hit(ray, 0, infinity, hitRecord)) {
+        std::cout << "Ray hit plane in: " << hitRecord.p << std::endl;
+    } else {
+        std::cout << "Ray did not hit plane" << std::endl;
+    }
+}
+
+void render() {
 
     int image_width = 400;
     auto camera_aspect_ratio = 16.0 / 9.0;
@@ -61,9 +96,20 @@ int main() {
 
     if (rendered_image.fail()) {
         std::cerr << "Error: Failed to write to file." << std::endl;
-        return 1;
-    }
-    else {
+    } else {
         std::clog << "Image rendered" << std::endl;
     }
+}
+
+Color rayColor(const Ray& r) {
+
+    HitRecord record;
+
+    if (sphere.hit(r, 0, infinity, record)) {
+        return 0.5 * (record.normal + Color(1, 1, 1));
+    }
+
+    Vector3 unitDirection = unit_vector(r.Direction());
+    float a = 0.5 * (unitDirection.y + 1.0);
+    return (1.0 - a) * Color(1.0, 1.0, 1.0) + a * Color(0.5, 0.7, 1.0);
 }

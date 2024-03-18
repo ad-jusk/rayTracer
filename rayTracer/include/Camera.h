@@ -28,8 +28,6 @@ private:
     double focal_length;
     double viewport_width;
     double viewport_height;
-    // navigate the pixel grid with Vu and Vv 
-    // (left to right edge vector, upper to lower edge vector)
     Vector3 viewport_u;
     Vector3 viewport_v;
 };

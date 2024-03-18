@@ -1,8 +1,11 @@
 ﻿#pragma once
+
+#include <cmath>
+
 #include "Vector3.h"
 #include "Hittable.h"
 #include "Ray.h"
-#include <cmath>
+
 #define M_PI 3.14159265358979323846
 /*
 	plane equation 
@@ -20,14 +23,12 @@
 	t = − ((o − p0) ⋅ n)/(l ⋅ n) = ((p0 − o) ⋅ n)/(l ⋅ n)
 */
 
-class Plane : public Hittable
-{
+class Plane : public Hittable {
+
 public:
     Plane() : normal(Vector3()), distance(0.0f) {}
     Plane(const Vector3& normal, float distance) : normal(normal), distance(distance) {}
 
-
-    // Finds intersection of plane and ray
 	virtual bool hit(const Ray& ray, double tmin, double tmax, HitRecord& rec) const override {
 		double ndotD = dot(normal, ray.Direction());
 		rec.type = MISS;
@@ -46,16 +47,13 @@ public:
 				rec.type = HIT;
 			else
 				rec.type = INSIDE_PRIMITIVE;
-
-			// Populate the HitRecord
 			rec.t = t;
-			// Assign intersection point to rec.p
 			rec.p = ray.Origin() + t * ray.Direction();
 			rec.normal = normal;
 		}
-
 		return true;
 	};
+
 private:
 	Vector3 normal;
 	float distance;

@@ -11,20 +11,16 @@ public:
 	Ray(const Vector3& origin, float distance) : ray_origin(origin), ray_distance(distance) {};
 
 	Vector3 Origin() const { return ray_origin; }
+
 	Vector3 Direction() const { return ray_direction; }
+
 	Vector3 Destination() const { return ray_destination; }
 
 	void setOrigin(Vector3 o) { ray_origin = o; }
+	
 	void setDirection(Vector3 d) { ray_direction = d; }
+	
 	void setDistance(Vector3 distance) { ray_direction = distance; }
-
-	// ray equation
-	/*
-		 p(t) = o + td
-		 p(t) -> point that lies on the ray
-		 o -> origin of the ray
-		 d -> direction of the ray
-	*/
 
 	Vector3 PointAt(float t) const {
 		return ray_origin + ray_direction * t;

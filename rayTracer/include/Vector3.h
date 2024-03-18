@@ -12,29 +12,23 @@ public:
 	float get_x() const { return x; }
 	float get_y() const { return y; }
 	float get_z() const { return z; }
-	//accessing components of Vector3 object
 	float operator[](int i) const { return (i == 0) ? x : (i == 1) ? y : z; }
-	//accessing / modifying components of Vector3 object
 	float& operator[](int i) { return (i == 0) ? x : (i == 1) ? y : z; }
 
-	//chaining operations on vectors
 	Vector3 operator-() const { return Vector3(-x, -y, -z); }
 	Vector3& operator+=(const Vector3& v) {
 		x += v.x;
 		y += v.y;
 		z += v.z;
-
 		return *this;
 	}
 	Vector3& operator*=(float s) {
 		x *= s;
 		y *= s;
 		z *= s;
-
 		return *this;
 	}
 	Vector3& operator/=(float s) {
-		// Perform division only if s is not zero
 		if (s != 0.0f) {
 			return *this *= 1 / s;
 		}
@@ -44,12 +38,19 @@ public:
 		}
 	}
 
-	float length() const {
-		return sqrt(lengthSquared());
-	}
+	float length() const { return sqrt(lengthSquared()); }
 
-	double lengthSquared() const {
-		return pow(x, 2) + pow(y, 2) + pow(z, 2);
+	float lengthSquared() const { return pow(x, 2) + pow(y, 2) + pow(z, 2); }
+
+	float dot(const Vector3& rhs) const { return x * rhs.x + y * rhs.y + z * rhs.z; }
+
+	float angle(const Vector3& rhs) const { return acos(this->dot(rhs) / (this->length() * rhs.length())); }
+
+	Vector3 cross(const Vector3& rhs) const { 
+		return {
+			this->y * rhs.z - this->z * rhs.y, this->z * rhs.x - this->x * rhs.z,
+			this->x * rhs.y - this->y * rhs.x
+		};
 	}
 };
 
@@ -93,10 +94,4 @@ inline double dot(const Vector3& u, const Vector3& v) {
 	return u.x * v.x
 		+ u.y * v.y
 		+ u.z * v.z;
-}
-
-inline Vector3 cross(const Vector3& u, const Vector3& v) {
-	return Vector3(u.y * v.z - u.z * v.y,
-		u.z * v.x - u.x * v.z,
-		u.x * v.y - u.y * v.x);
 }
