@@ -1,4 +1,6 @@
 #pragma once
+#include "Hittable.h"
+constexpr double EPSILON = 1e-6;
 
 class Triangle : public Hittable {
 
