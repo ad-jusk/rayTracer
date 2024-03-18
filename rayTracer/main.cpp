@@ -35,7 +35,7 @@ void firstExercise() {
     v2 = Vector3(4.f, 1.f, 3.f);
 
     std::cout << "Cross product of " << v1 << " and " << v2 << ": " << v1.cross(v2) << std::endl;
-    std::cout << "Cross product of cross product:"  << unit_vector(v1.cross(v2)) << std::endl;
+    std::cout << "Normal of cross product:"  << unit_vector(v1.cross(v2)) << std::endl;
 
     Sphere s(Point3(0.f, 0.f, 0.f), 10);
     Vector3 rayPoint(0, 0, -20);
