@@ -3,8 +3,15 @@
 #include "Ray.h"
 
 // Class representing data of ray hitting a hittable object
+enum IntersectionType {
+    MISS,
+    HIT,
+    INSIDE_PRIMITIVE
+}; 
 class HitRecord {
 public:
+    // Intersection type
+    IntersectionType type;
     // Hit point
     Point3 p;
     // Hit normal
