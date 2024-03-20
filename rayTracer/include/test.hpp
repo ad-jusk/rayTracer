@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ray.hpp";
+#include "sphere.hpp"
 
 void testVector() {
 
@@ -64,7 +64,22 @@ void testRay() {
 }
 
 void testSphere() {
-	// TODO
+
+	Vector3 sphereCenter(0, 0, 0);
+	Sphere s1(sphereCenter, 10);
+
+	Vector3 origin(0, -20, 0);
+	Vector3 direction(0, 1, 0);
+
+	Ray r1(origin, direction);
+
+	std::cout << "Sphere 1: " << s1 << std::endl;
+
+	std::cout << "Ray 1: " << r1 << std::endl;
+
+	IntersectionInfo info1 = s1.getRayIntersection(r1);
+
+	std::cout << info1 << std::endl;
 }
 
 void testPlane() {

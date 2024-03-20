@@ -4,6 +4,7 @@
 int main() {
 
 	// testVector();
-	testRay();
+	// testRay();
+	testSphere();
 
 }
