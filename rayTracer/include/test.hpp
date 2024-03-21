@@ -1,6 +1,7 @@
 #pragma once
 
 #include "sphere.hpp"
+#include "plane.hpp"
 
 void testVector() {
 
@@ -13,7 +14,7 @@ void testVector() {
 	std::cout << "Division of " << v1 << " by 2: " << v1 / 2 << std::endl;
 	std::cout << "Angle between " << v1 << " and " << v2 << ": " << v1.angle(v2) << std::endl;
 	std::cout << "Cross product of " << v1 << " and " << v2 << ": " << v1.cross(v2) << std::endl;
-	std::cout << "Dot product of " << v1 << " and " << v2 << ": " << v1 * v2 << std::endl;
+	std::cout << "Multiplication of " << v1 << " and " << v2 << ": " << v1 * v2 << std::endl;
 	std::cout << "Normalized vector " << v2 << ": " << v2.normalize() << std::endl;
 
 }
@@ -83,5 +84,20 @@ void testSphere() {
 }
 
 void testPlane() {
-	// TODO
+	
+	Vector3 v1(-10, 20, 0);
+	Vector3 v2(1, 0, 0);
+	Vector3 v3(20, 2, 0);
+
+	Ray r1(v1, v2);
+
+	std::cout << r1 << std::endl;
+
+	Plane p1(v3, 0);
+
+	std::cout << p1 << std::endl;
+
+	IntersectionInfo info = p1.getRayIntersection(r1);
+
+	std::cout << info << std::endl;
 }

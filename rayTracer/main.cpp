@@ -5,6 +5,7 @@ int main() {
 
 	// testVector();
 	// testRay();
-	testSphere();
+	// testSphere();
+	testPlane();
 
 }
