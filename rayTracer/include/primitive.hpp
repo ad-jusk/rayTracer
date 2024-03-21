@@ -18,8 +18,13 @@ struct IntersectionInfo {
 	}
 
 	friend std::ostream& operator<<(std::ostream& os, const IntersectionInfo& info) {
-		os << (info.hit ? "Ray hit primitive -> " : "Ray did not hit primitive -> ") <<
-			"intersection point: " << info.point << ", distance: " << info.distanceFromRayOrigin;
+		if (!info.hit) {
+			os << "Ray did not hit primitive";
+		}
+		else {
+			os << "Ray hit primitive -> " <<
+				"intersection point: " << info.point << ", distance: " << info.distanceFromRayOrigin;
+		}
 		return os;
 	}
 };

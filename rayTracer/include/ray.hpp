@@ -14,7 +14,7 @@ public:
 	void setTarget(Vector3& target);
 
 	friend std::ostream& operator<<(std::ostream& os, const Ray& ray) {
-		os << "Origin: " << ray.origin << ", Direction: " << ray.direction << ", Target: " << ray.target;
+		os << "Ray: " << "origin: " << ray.origin << ", direction: " << ray.direction << ", target: " << ray.target;
 		return os;
 	}
 };

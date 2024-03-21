@@ -1,11 +1,10 @@
-
 #include "include/test.hpp"
 
 int main() {
 
-	// testVector();
-	// testRay();
-	// testSphere();
-	testPlane();
-
+	 testVector();
+	 testRay();
+	 testSphere();
+	 testPlane();
+	 testTriangle();
 }

@@ -2,8 +2,11 @@
 
 #include "sphere.hpp"
 #include "plane.hpp"
+#include "triangle.hpp"
 
 void testVector() {
+
+	std::cout << std::endl  << "### VECTOR TESTS ###" << std::endl;
 
 	Vector3 v1(0, 3, 0);
 	Vector3 v2(5, 5, 0);
@@ -21,6 +24,8 @@ void testVector() {
  
 void testRay() {
 
+	std::cout << std::endl << "### RAY TESTS ###" << std::endl;
+
 	Vector3 p1(1, 2, 3);
 	Vector3 p2(4, 5, 6);
 	Vector3 p3(15, 19.5, 24);
@@ -28,7 +33,7 @@ void testRay() {
 
 	Ray ray(p1, p2);
 
-	std::cout << "Ray -> " << ray << std::endl;
+	std::cout << "Ray: " << ray << std::endl;
 
 	bool result1 = ray.isPointOnRay(p1);
 	bool result2 = ray.isPointOnRay(p2);
@@ -66,38 +71,92 @@ void testRay() {
 
 void testSphere() {
 
+	std::cout << std::endl << "### SPHERE TESTS ###" << std::endl;
+
 	Vector3 sphereCenter(0, 0, 0);
 	Sphere s1(sphereCenter, 10);
 
-	Vector3 origin(0, -20, 0);
-	Vector3 direction(0, 1, 0);
+	Vector3 origin(0, 0, -20);
+	Vector3 direction1(0, 0, 1);
+	Vector3 direction2(0, 1, 0);
 
-	Ray r1(origin, direction);
+	Ray r1(origin, direction1);
+	Ray r2(origin, direction2);
 
-	std::cout << "Sphere 1: " << s1 << std::endl;
-
+	std::cout << "Sphere: " << s1 << std::endl;
 	std::cout << "Ray 1: " << r1 << std::endl;
+	std::cout << "Ray 2: " << r2 << std::endl;
 
 	IntersectionInfo info1 = s1.getRayIntersection(r1);
+	IntersectionInfo info2 = s1.getRayIntersection(r2);
 
 	std::cout << info1 << std::endl;
+	std::cout << info2 << std::endl;
 }
 
 void testPlane() {
 	
-	Vector3 v1(-10, 20, 0);
-	Vector3 v2(1, 0, 0);
-	Vector3 v3(20, 2, 0);
+	std::cout << std::endl << "### PLANE TESTS ###" << std::endl;
 
-	Ray r1(v1, v2);
-
-	std::cout << r1 << std::endl;
+	Vector3 v1(0, 0, -20);
+	Vector3 v2(0, 1, 0);
+	Vector3 v3(0, 1, 1);
 
 	Plane p1(v3, 0);
 
 	std::cout << p1 << std::endl;
 
+	Ray r1(v1, v2);
+
+	std::cout << r1 << std::endl;
+
 	IntersectionInfo info = p1.getRayIntersection(r1);
+
+	std::cout << info << std::endl;
+}
+
+void testTriangle() {
+
+	std::cout << std::endl << "### TRIANGLE TESTS ###" << std::endl;
+
+	Vector3 v1(0, 0, 0);
+	Vector3 v2(1, 0, 0);
+	Vector3 v3(0, 1, 0);
+
+	Triangle t(v1, v2, v3);
+
+	std::cout << t << std::endl;
+
+	Vector3 origin(-1, 0.5, 0);
+	Vector3 direction(1, 0, 0);
+
+	Ray r(origin, direction);
+
+	std::cout << r << std::endl;
+
+	IntersectionInfo info = t.getRayIntersection(r);
+
+	std::cout << info << std::endl;
+
+	origin = Vector3(2, -1, 0);
+	direction = Vector3(2, 2, 0);
+
+	r = Ray(origin, direction);
+
+	std::cout << r << std::endl;
+
+	info = t.getRayIntersection(r);
+
+	std::cout << info << std::endl;
+
+	origin = Vector3(0, 0, -1);
+	direction = Vector3(0, 0, 1);
+
+	r = Ray(origin, direction);
+
+	std::cout << r << std::endl;
+
+	info = t.getRayIntersection(r);
 
 	std::cout << info << std::endl;
 }
