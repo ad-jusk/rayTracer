@@ -2,9 +2,11 @@
 
 int main() {
 
-	 testVector();
-	 testRay();
-	 testSphere();
-	 testPlane();
-	 testTriangle();
+	 //testVector();
+	 //testRay();
+	 //testSphere();
+	 //testPlane();
+	 //testTriangle();
+
+	testLodepng();
 }
