@@ -63,6 +63,36 @@ public:
         return acos(dot / (this->length() * rhs.length()));
     }
 
+    Vector3 clamp_0_1() const {
+        float x = this->x;
+        float y = this->y;
+        float z = this->z;
+
+        if (x < 0) x = 0;
+        if (y < 0) y = 0;
+        if (z < 0) z = 0;
+
+        if (x > 1) x = 1;
+        if (y > 1) y = 1;
+        if (z > 1) z = 1;
+
+        return Vector3(x, y, z);
+    }
+
+    Vector3 clamp_0_255() const {
+        Vector3 c =  clamp_0_1();
+
+        c.x *= 255.f;
+        c.y *= 255.f;
+        c.z *= 255.f;
+        
+        c.x = std::min(c.x, 255.f);
+        c.y = std::min(c.y, 255.f);
+        c.z = std::min(c.z, 255.f);
+        
+        return c;
+    }
+
     bool operator==(const Vector3& other) const {
         return x == other.x && y == other.y && z == other.z;
     }

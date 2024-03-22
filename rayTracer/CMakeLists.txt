@@ -1,4 +1,4 @@
-add_executable(rayTracer "main.cpp"   "src/ray.cpp" "src/sphere.cpp" "src/plane.cpp" "src/triangle.cpp")
+add_executable(rayTracer "main.cpp"   "src/ray.cpp" "src/sphere.cpp" "src/plane.cpp" "src/triangle.cpp" "src/image.cpp")
 
 add_subdirectory(lib)
 

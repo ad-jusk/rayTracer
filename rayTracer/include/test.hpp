@@ -162,28 +162,3 @@ void testTriangle() {
 
 	std::cout << info << std::endl;
 }
-
-void testLodepng() {
-
-	const unsigned width = 500;
-	const unsigned height = 500;
-	std::vector<uint8_t> image(width * height * 3, 255);
-
-	for (size_t y = 0; y < height; ++y) {
-		for (size_t x = 0; x < width; ++x) {
-			size_t index = 3 * width * y + 3 * x;
-			image[index + 0] = 0;
-			image[index + 1] = 255;
-			image[index + 2] = 0;
-		}
-	}
-
-	unsigned error = lodepng::encode("../../../../image.png", image, width, height, LCT_RGB);
-	if (error) {
-		std::cerr << "Encoder error " << error << ": " << lodepng_error_text(error) << std::endl;
-		return;
-	}
-	else {
-		std::cout << "Image saved as red_background.png" << std::endl;
-	}
-}
