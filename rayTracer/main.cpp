@@ -1,5 +1,6 @@
 #include "include/test.hpp"
 #include "include/camera/orthogonalCamera.hpp"
+#include "include/camera/perspectiveCamera.hpp"
 
 int main() {
 	
@@ -10,9 +11,13 @@ int main() {
 	primitives.push_back(p1);
 	primitives.push_back(p2);
 
-	// RENDER
+	// RENDER ORTHOGONAL
 	OrthogonalCamera camera(Vector3(0, 0, 0), Vector3(0, 0, 1), 500, 500);
 	camera.renderScene(primitives);
+
+	// RENDER PERSPECTIVE
+	//PerspectiveCamera camera(Vector3(0, 0, 0), Vector3(0, 0, 1), 500, 500, 60);
+	//camera.renderScene(primitives, true);
 
 	// DELETE ALLOCATED PRIMITIVES
 	for (Primitive* p : primitives) {

@@ -1,6 +1,6 @@
 #include "../include/image.hpp"
 
-void PngImage::clearColor(Vector3& color) {
+void PngImage::clearColor(const Vector3& color) {
 	for (int y = 0; y < this->height; y++) {
 		for (int x = 0; x < this->width; x++) {
 			setPixel(y, x, color);
@@ -31,7 +31,7 @@ void PngImage::colorful6ColumnsBackground() {
 				break;
 			}
 			case 3: {
-				setPixel(y, x, Vector3(1, intensity * 0.4f, 0));
+				setPixel(y, x, Vector3(0.7, intensity * 0.4f, 0));
 				break;
 			}
 			case 4: {
@@ -60,9 +60,9 @@ void PngImage::setPixel(int y, int x, const Vector3& color) {
 
 Vector3 PngImage::getPixelColor(int y, int x) {
 	size_t index = channels * width * y + channels * x;
-	float r = static_cast<float>(this->imageMatrix[index]);
-	float g = static_cast<float>(this->imageMatrix[index] + 1);
-	float b = static_cast<float>(this->imageMatrix[index] + 2);
+	float r = static_cast<float>(this->imageMatrix[index]) / 255;
+	float g = static_cast<float>(this->imageMatrix[index + 1]) / 255;
+	float b = static_cast<float>(this->imageMatrix[index + 2]) / 255;
 	return Vector3(r, g, b);
 }
 

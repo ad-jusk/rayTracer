@@ -42,5 +42,5 @@ void OrthogonalCamera::renderScene(std::vector<Primitive*> primitives) const {
 			}
 		}
 	}
-	image.save("../../../../image.png");
+	image.save("../../../../image_orthogonal.png");
 }

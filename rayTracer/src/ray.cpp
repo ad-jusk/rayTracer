@@ -1,6 +1,6 @@
 #include "../include/ray.hpp"
 
-Ray::Ray(Vector3& origin, Vector3& direction, const Vector3& target, bool directionFromTarget, float length) {
+Ray::Ray(const Vector3& origin, Vector3& direction, const Vector3& target, bool directionFromTarget, float length) {
 
 	this->origin = origin;
 	this->length = length;

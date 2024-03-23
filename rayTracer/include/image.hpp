@@ -14,7 +14,7 @@ public:
 		this->imageMatrix.resize(width * height * channels, 255);
 	}
 
-	void clearColor(Vector3& color);
+	void clearColor(const Vector3& color);
 
 	void colorful6ColumnsBackground();
 
