@@ -1,18 +1,21 @@
 #include "include/test.hpp"
-#include "include/image.hpp"
+#include "include/camera/orthogonalCamera.hpp"
 
 int main() {
+	
+	// PREPARE PRIMITIVES
+	std::vector<Primitive*> primitives;
+	Primitive* p1 = new Sphere(Vector3(1, 0, 7), 0.7f);
+	Primitive* p2 = new Sphere(Vector3(0, 0, 7), 1.0f, Vector3(0, 0, 1));
+	primitives.push_back(p1);
+	primitives.push_back(p2);
 
-	PngImage image;
-	Vector3 color(1, 0, 1);
-	Vector3 secondColor(1, 0.8, 0.1);
-	image.clearColor(color);
+	// RENDER
+	OrthogonalCamera camera(Vector3(0, 0, 0), Vector3(0, 0, 1), 500, 500);
+	camera.renderScene(primitives);
 
-	for (int y = image.sizeY() / 2; y < image.sizeY(); y++) {
-		for (int x = image.sizeX() / 2; x < image.sizeX(); x++) {
-			image.setPixel(y, x, secondColor);
-		}
+	// DELETE ALLOCATED PRIMITIVES
+	for (Primitive* p : primitives) {
+		delete p;
 	}
-
-	image.save("../../../../image.png");
 }

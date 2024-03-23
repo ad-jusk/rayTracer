@@ -8,7 +8,49 @@ void PngImage::clearColor(Vector3& color) {
 	}
 }
 
-void PngImage::setPixel(int y, int x, Vector3& color) {
+void PngImage::colorful6ColumnsBackground() {
+
+	int partX = static_cast<int>(this->width / 6);
+	int partY = static_cast<int>(this->height / 6);
+
+	for (int y = 0;y < this->height;y++) {
+		for (int x = 0;x < this->width;x++) {
+			int column = static_cast<int>(static_cast<float>(x) / partX);
+			float intensity = static_cast<float>(static_cast<float>(y) / partY / 6.0f);
+			switch (column) {
+			case 0: {
+				setPixel(y, x, Vector3(intensity + 0.1f, 0, 0));
+				break;
+			}
+			case 1: {
+				setPixel(y, x, Vector3(0, intensity + 0.1f, 0));
+				break;
+			}
+			case 2: {
+				setPixel(y, x, Vector3(0, 0, intensity + 0.1f));
+				break;
+			}
+			case 3: {
+				setPixel(y, x, Vector3(1, intensity * 0.4f, 0));
+				break;
+			}
+			case 4: {
+				setPixel(y, x, Vector3(intensity, 1, intensity * 0.4));
+				break;
+			}
+			case 5: {
+				setPixel(y, x, Vector3(1, 1, intensity + 0.1f));
+				break;
+			}
+			default:
+				setPixel(y, x, Vector3(1, 1, intensity));
+				break;
+			}
+		}
+	}
+}
+
+void PngImage::setPixel(int y, int x, const Vector3& color) {
 	size_t index = channels * width * y + channels * x;
 	Vector3 clampedColor = color.clamp_0_255();
 	this->imageMatrix[index] = static_cast<uint8_t>(clampedColor.x);

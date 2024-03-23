@@ -1,6 +1,6 @@
 #include "../include/sphere.hpp"
 
-Sphere::Sphere(Vector3& center, float radius, const Vector3& color) : Primitive(color) {
+Sphere::Sphere(const Vector3& center, float radius, const Vector3& color) : Primitive(color) {
 	this->center = center;
 	this->changeRadius(radius);
 }
@@ -11,7 +11,7 @@ void Sphere::changeRadius(float radius) {
 	this->volume = (4 / 3) * MATH_PI * (radius * radius * radius);
 }
 
-IntersectionInfo Sphere::getRayIntersection(const Ray& ray) const {
+IntersectionInfo Sphere::getRayIntersection(const Ray& ray) const  {
 
 	IntersectionInfo info;
 

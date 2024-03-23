@@ -12,7 +12,7 @@ public:
 
 	Plane(Vector3& normal, float d, const Vector3& color = Vector3(0, 1, 0));
 
-	virtual IntersectionInfo getRayIntersection(const Ray& ray) const;
+	virtual IntersectionInfo getRayIntersection(const Ray& ray) const override;
 
 	friend std::ostream& operator<<(std::ostream& os, const Plane& plane) {
 		os << "Plane: normal = " << plane.normalVector;

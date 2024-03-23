@@ -16,7 +16,9 @@ public:
 
 	void clearColor(Vector3& color);
 
-	void setPixel(int y, int x, Vector3& color);
+	void colorful6ColumnsBackground();
+
+	void setPixel(int y, int x, const Vector3& color);
 
 	Vector3 getPixelColor(int y, int x);
 
