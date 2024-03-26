@@ -1,4 +1,5 @@
 #include "../include/ray.hpp"
+#include "../include/primitive.hpp"
 
 Ray::Ray(const Vector3& origin, Vector3& direction, const Vector3& target, bool directionFromTarget, float length) {
 
@@ -88,4 +89,19 @@ void Ray::setTarget(Vector3& target) {
     }
     this->target = target;
     this->direction = (this->target - this->origin).normalize();
+}
+
+Vector3* Ray::getPixelColor(std::vector<Primitive*> primitives) const {
+
+    float distance = std::numeric_limits<float>::max();
+    Vector3* color = nullptr;
+
+    for (Primitive* p : primitives) {
+        IntersectionInfo info = p->getRayIntersection(*this);
+        if (info.hit && info.distanceFromRayOrigin < distance) {
+            color = &p->color;
+            distance = info.distanceFromRayOrigin;
+        }
+    }
+    return color;
 }

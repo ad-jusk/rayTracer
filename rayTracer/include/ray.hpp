@@ -12,6 +12,7 @@ public:
 	bool isPointOnRay(Vector3& point);
 	void setDirection(Vector3& direction);
 	void setTarget(Vector3& target);
+	Vector3* getPixelColor(std::vector<class Primitive*> primitives) const;
 
 	friend std::ostream& operator<<(std::ostream& os, const Ray& ray) {
 		os << "Ray: " << "origin: " << ray.origin << ", direction: " << ray.direction << ", target: " << ray.target;

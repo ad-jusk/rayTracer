@@ -23,11 +23,9 @@ Vector3 PerspectiveCamera::adaptiveAntialiasing(Ray& ray, Vector3& A, Vector3& B
 
 	if (E != zeroVector) {
 		ray.setTarget(E);
-		for (Primitive* p : primitives) {
-			IntersectionInfo info = p->getRayIntersection(ray);
-			if (info.hit) {
-				colorE = p->color;
-			}
+		Vector3* color = ray.getPixelColor(primitives);
+		if (color) {
+			colorE = *color;
 		}
 	}
 	else {
@@ -38,11 +36,9 @@ Vector3 PerspectiveCamera::adaptiveAntialiasing(Ray& ray, Vector3& A, Vector3& B
 
 	if (A != zeroVector) {
 		ray.setTarget(A);
-		for (Primitive* p : primitives) {
-			IntersectionInfo info = p->getRayIntersection(ray);
-			if (info.hit) {
-				colorA = p->color;
-			}
+		Vector3* color = ray.getPixelColor(primitives);
+		if (color) {
+			colorA = *color;
 		}
 	}
 	else {
@@ -51,11 +47,9 @@ Vector3 PerspectiveCamera::adaptiveAntialiasing(Ray& ray, Vector3& A, Vector3& B
 
 	if (B != zeroVector) {
 		ray.setTarget(B);
-		for (Primitive* p : primitives) {
-			IntersectionInfo info = p->getRayIntersection(ray);
-			if (info.hit) {
-				colorB = p->color;
-			}
+		Vector3* color = ray.getPixelColor(primitives);
+		if (color) {
+			colorB = *color;
 		}
 	}
 	else {
@@ -64,11 +58,9 @@ Vector3 PerspectiveCamera::adaptiveAntialiasing(Ray& ray, Vector3& A, Vector3& B
 
 	if (C != zeroVector) {
 		ray.setTarget(C);
-		for (Primitive* p : primitives) {
-			IntersectionInfo info = p->getRayIntersection(ray);
-			if (info.hit) {
-				colorC = p->color;
-			}
+		Vector3* color = ray.getPixelColor(primitives);
+		if (color) {
+			colorC = *color;
 		}
 	}
 	else {
@@ -77,11 +69,9 @@ Vector3 PerspectiveCamera::adaptiveAntialiasing(Ray& ray, Vector3& A, Vector3& B
 
 	if (D != zeroVector) {
 		ray.setTarget(D);
-		for (Primitive* p : primitives) {
-			IntersectionInfo info = p->getRayIntersection(ray);
-			if (info.hit) {
-				colorD = p->color;
-			}
+		Vector3* color = ray.getPixelColor(primitives);
+		if (color) {
+			colorD = *color;
 		}
 	}
 	else {
@@ -170,11 +160,9 @@ void PerspectiveCamera::renderScene(std::vector<Primitive*> primitives, const bo
 			else {
 				Vector3 direction;
 				Ray ray = Ray(this->position, direction, -rayTarget, true);
-				for (Primitive* p : primitives) {
-					IntersectionInfo info = p->getRayIntersection(ray);
-					if (info.hit) {
-						image.setPixel(y, x, p->color);
-					}
+				Vector3* color = ray.getPixelColor(primitives);
+				if (color) {
+					image.setPixel(y, x, *color);
 				}
 			}
 		}

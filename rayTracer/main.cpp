@@ -6,7 +6,7 @@ int main() {
 	
 	// PREPARE PRIMITIVES
 	std::vector<Primitive*> primitives;
-	Primitive* p1 = new Sphere(Vector3(1, 0, 7), 0.7f);
+	Primitive* p1 = new Sphere(Vector3(1, 0, 8), 0.7f);
 	Primitive* p2 = new Sphere(Vector3(0, 0, 7), 1.0f, Vector3(0, 0, 1));
 	primitives.push_back(p1);
 	primitives.push_back(p2);
