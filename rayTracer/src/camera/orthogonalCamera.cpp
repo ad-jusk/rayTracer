@@ -1,4 +1,4 @@
-#include "../include/camera/orthogonalCamera.hpp"
+#include "camera/orthogonalCamera.hpp"
 
 OrthogonalCamera::OrthogonalCamera(const Vector3& position, const Vector3& viewDirection, int width, int height,
 	const float pixelSizeX, const float pixelSizeY) {

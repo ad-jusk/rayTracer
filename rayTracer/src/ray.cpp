@@ -1,5 +1,4 @@
-#include "../include/ray.hpp"
-#include "../include/primitive.hpp"
+#include "primitive.hpp"
 
 Ray::Ray(const Vector3& origin, Vector3& direction, const Vector3& target, bool directionFromTarget, float length) {
 

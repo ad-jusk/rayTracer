@@ -2,7 +2,7 @@
 
 #include "ray.hpp"
 
-#define MATH_PI 3.14
+#define MATH_PI 3.14f
 
 struct IntersectionInfo {
 

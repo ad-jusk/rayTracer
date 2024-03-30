@@ -1,4 +1,4 @@
-#include "../include/triangle.hpp"
+#include "triangle.hpp"
 
 Triangle::Triangle(Vector3& v1, Vector3& v2, Vector3& v3, const Vector3& color) : Primitive(color) {
 	this->v1 = v1;

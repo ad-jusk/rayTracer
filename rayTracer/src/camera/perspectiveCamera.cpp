@@ -1,4 +1,4 @@
-#include "../include/camera/perspectiveCamera.hpp"
+#include "camera/perspectiveCamera.hpp"
 
 PerspectiveCamera::PerspectiveCamera(const Vector3& position, const Vector3& viewDirection, int width, int height, int fov) {
 	this->position = position;

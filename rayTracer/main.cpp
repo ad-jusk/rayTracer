@@ -1,6 +1,6 @@
-#include "include/test.hpp"
-#include "include/camera/orthogonalCamera.hpp"
-#include "include/camera/perspectiveCamera.hpp"
+#include "test.hpp"
+#include "camera/orthogonalCamera.hpp"
+#include "camera/perspectiveCamera.hpp"
 
 int main() {
 	

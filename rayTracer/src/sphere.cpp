@@ -1,4 +1,4 @@
-#include "../include/sphere.hpp"
+#include "sphere.hpp"
 
 Sphere::Sphere(const Vector3& center, float radius, const Vector3& color) : Primitive(color) {
 	this->center = center;
