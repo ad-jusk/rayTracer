@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../primitive.hpp"
-#include "../image.hpp"
+#include "primitive.hpp"
+#include "image.hpp"
 
 class OrthogonalCamera {
 

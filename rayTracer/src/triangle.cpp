@@ -1,6 +1,6 @@
 #include "triangle.hpp"
 
-Triangle::Triangle(Vector3& v1, Vector3& v2, Vector3& v3, const Vector3& color) : Primitive(color) {
+Triangle::Triangle(Vector3& v1, Vector3& v2, Vector3& v3, const Material& material) : Primitive(material) {
 	this->v1 = v1;
 	this->v2 = v2;
 	this->v3 = v3;
@@ -17,7 +17,7 @@ IntersectionInfo Triangle::getRayIntersection(const Ray& ray) const {
     float a = e1 * h;
 
     if (a > -0.00001 && a < 0.00001) {
-        return info.miss();
+        return info;
     }
 
     float f = 1 / a;
@@ -25,25 +25,32 @@ IntersectionInfo Triangle::getRayIntersection(const Ray& ray) const {
     float u = s * f * h;
 
     if (u < 0.0f || u > 1.0f) {
-        return info.miss();
+        return info;
     }
 
     Vector3 q = s.cross(e1);
     float v = ray.direction * f * q;
 
     if (v < 0.0f || u + v > 1.0f) {
-        return info.miss();
+        return info;
     }
     
     float distance = e2 * f * q;
 
     if (distance <= 0.00001) {
-        return info.miss();
+        return info;
     }
 
     info.hit = true;
     info.point = ray.origin + (ray.direction * distance);
     info.distanceFromRayOrigin = distance;
+    info.hitPrimitive = this;
 
     return info;
+}
+
+Vector3 Triangle::getNormal(const Vector3& point) const {
+    Vector3 a = this->v1 - this->v2;
+    Vector3 b = this->v1 - this->v3;
+    return a.cross(b);
 }

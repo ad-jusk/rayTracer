@@ -1,6 +1,6 @@
 #include "sphere.hpp"
 
-Sphere::Sphere(const Vector3& center, float radius, const Vector3& color) : Primitive(color) {
+Sphere::Sphere(const Vector3& center, float radius, const Material& material) : Primitive(material) {
 	this->center = center;
 	this->changeRadius(radius);
 }
@@ -28,7 +28,7 @@ IntersectionInfo Sphere::getRayIntersection(const Ray& ray) const  {
 
 	// NO INTERSECTION
 	if (delta < 0.001f) {
-		return info.miss();
+		return info;
 	}
 
 	// ONE INTERSECTION
@@ -36,11 +36,12 @@ IntersectionInfo Sphere::getRayIntersection(const Ray& ray) const  {
 		float t = -b / (2 * a);
 		// IF T IS < 0, INTERSECTION OCCURS BEFORE ORIGIN POINT OF RAY
 		if (t < 0) {
-			return info.miss();
+			return info;
 		}
 		info.hit = true;
 		info.point = ray.origin + ray.direction * t;
 		info.distanceFromRayOrigin = ray.origin.distance(info.point);
+		info.hitPrimitive = this;
 		return info;
 	}
 
@@ -65,13 +66,14 @@ IntersectionInfo Sphere::getRayIntersection(const Ray& ray) const  {
 	}
 
 	if (t1 < 0 && t2 < 0) {
-		return info.miss();
+		return info;
 	}
 
 	if (t1 < 0) {
 		info.hit = true;
 		info.point = p2;
 		info.distanceFromRayOrigin = dist2;
+		info.hitPrimitive = this;
 		return info;
 	}
 
@@ -79,6 +81,7 @@ IntersectionInfo Sphere::getRayIntersection(const Ray& ray) const  {
 		info.hit = true;
 		info.point = p1;
 		info.distanceFromRayOrigin = dist1;
+		info.hitPrimitive = this;
 		return info;
 	}
 
@@ -87,6 +90,11 @@ IntersectionInfo Sphere::getRayIntersection(const Ray& ray) const  {
 	info.hit = true;
 	info.distanceFromRayOrigin = std::min(dist1, dist2);
 	info.point = info.distanceFromRayOrigin == dist1 ? p1 : p2;
+	info.hitPrimitive = this;
 
 	return info;
+}
+
+Vector3 Sphere::getNormal(const Vector3& point) const {
+	return (point - this->center).normalize();
 }

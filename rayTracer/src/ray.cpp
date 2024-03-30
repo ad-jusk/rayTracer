@@ -1,6 +1,7 @@
 #include "primitive.hpp"
+#include "light/lightSource.hpp"
 
-Ray::Ray(const Vector3& origin, Vector3& direction, const Vector3& target, bool directionFromTarget, float length) {
+Ray::Ray(const Vector3& origin, const Vector3& direction, const Vector3& target, bool directionFromTarget, float length) {
 
 	this->origin = origin;
 	this->length = length;
@@ -90,17 +91,74 @@ void Ray::setTarget(Vector3& target) {
     this->direction = (this->target - this->origin).normalize();
 }
 
-Vector3* Ray::getPixelColor(std::vector<Primitive*> primitives) const {
+IntersectionInfo Ray::getPixelHit(std::vector<Primitive*> primitives) const {
 
     float distance = std::numeric_limits<float>::max();
-    Vector3* color = nullptr;
+    IntersectionInfo closest;
 
     for (Primitive* p : primitives) {
         IntersectionInfo info = p->getRayIntersection(*this);
         if (info.hit && info.distanceFromRayOrigin < distance) {
-            color = &p->color;
+            closest = info;
             distance = info.distanceFromRayOrigin;
         }
     }
-    return color;
+    return closest;
+}
+
+Vector3* Ray::getPixelColor(std::vector<Primitive*> primitives, const std::vector<LightSource*> lights) const {
+
+    IntersectionInfo info = this->getPixelHit(primitives);
+
+    float r, g, b;
+    
+    // AMBIENT LIGHT
+    r = g = b = 0.2f;
+
+    if (!info.hit) {
+        return nullptr;
+    }
+
+    for (LightSource* l : lights) {
+
+        const float distance = info.point.distance(l->position);
+        Ray ray = Ray(info.point, Vector3(), l->position, true);
+
+        if (ray.lightBlocked(primitives)) {
+            continue;
+        }
+
+        Vector3 normal = info.hitPrimitive->getNormal(info.point).normalize();
+        Vector3 direction = ray.direction.normalize();
+        float fallof = std::fabs(normal * direction / (normal.length() * direction.length()));
+        
+        float i = l->intensity * fallof / (distance * distance);
+        i = std::min(i, 1.f);
+
+        Vector3 reflection = -ray.direction - normal * (-ray.direction * normal) * 2;
+        float intensity = -i * std::pow(info.hitPrimitive->material.mirrorReflection * (direction * normal) + info.hitPrimitive->material.diffuseReflection * (reflection * -this->direction), info.hitPrimitive->material.specularExponent);
+        intensity = std::min(intensity, 1.f);
+
+        r += l->color.x * intensity;
+        g += l->color.y * intensity;
+        b += l->color.z * intensity;
+    }
+
+    float final_r = info.hitPrimitive->material.color.x * r;
+    float final_g = info.hitPrimitive->material.color.y * g;
+    float final_b = info.hitPrimitive->material.color.z * b;
+    
+    return new Vector3(final_r, final_g, final_b);
+}
+
+bool Ray::lightBlocked(std::vector<class Primitive*> primitives) const {
+    // TODO: THIS HAS TO RETURN FALSE IF ONE PRIMITIVE 
+    // IS SHADOWED BY ANOTHER
+    for (Primitive* p : primitives) {
+        IntersectionInfo info = p->getRayIntersection(*this);
+        if (info.hit) {
+            return false;
+        }
+    }
+    return true;
 }

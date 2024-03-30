@@ -1,6 +1,6 @@
 #include "../include/plane.hpp"
 
-Plane::Plane(Vector3& normal, float d, const Vector3& color) : Primitive(color) {
+Plane::Plane(Vector3& normal, float d, const Material& material) : Primitive(material) {
 	this->normalVector = normal;
 	this->a = normal.x;
 	this->b = normal.y;
@@ -14,14 +14,14 @@ IntersectionInfo Plane::getRayIntersection(const Ray& ray) const {
 
 	// RAY IS PARALLEL
 	if (this->normalVector * ray.direction == 0) {
-		return info.miss();
+		return info;
 	}
 
 	float t = (this->d - (this->normalVector * ray.origin)) / (this->normalVector * ray.direction);
 	
 	// INTERSECTION IS BEFORE ORIGIN OF RAY
 	if (t < 0) {
-		return info.miss();
+		return info;
 	}
 
 	float x = ray.origin.x + (t * ray.direction.x);
@@ -33,12 +33,17 @@ IntersectionInfo Plane::getRayIntersection(const Ray& ray) const {
 	float distance = ray.origin.distance(point);
 
 	if (distance > ray.length) {
-		return info.miss();
+		return info;
 	}
 
 	info.hit = true;
 	info.distanceFromRayOrigin = distance;
 	info.point = point;
+	info.hitPrimitive = this;
 
 	return info;
+}
+
+Vector3 Plane::getNormal(const Vector3& point) const {
+	return this->normalVector;
 }

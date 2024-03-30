@@ -34,9 +34,9 @@ void OrthogonalCamera::renderScene(std::vector<Primitive*> primitives) const {
 	for (int y = 0;y < this->height; y++) {
 		for (int x = 0;x < this->width;x++) {
 			int rayIndex = y * this->width + x;
-			Vector3* color = this->rays[rayIndex].getPixelColor(primitives);
-			if (color) {
-				image.setPixel(x, y, *color);
+			IntersectionInfo info = this->rays[rayIndex].getPixelHit(primitives);
+			if (info.hit) {
+				image.setPixel(x, y, info.hitPrimitive->material.color);
 			}
 		}
 	}
