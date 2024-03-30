@@ -7,7 +7,7 @@ class Triangle : public Primitive {
 public:
 	Vector3 v1, v2, v3, normalVector;
 
-	Triangle(Vector3& v1, Vector3& v2, Vector3& v3, const Material& material);
+	Triangle(const Vector3& v1, const Vector3& v2, const Vector3& v3, const Material& material);
 
 	virtual IntersectionInfo getRayIntersection(const Ray& ray) const override;
 
