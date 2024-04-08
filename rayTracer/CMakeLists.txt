@@ -1,8 +1,14 @@
-add_executable(rayTracer "main.cpp"   "src/ray.cpp" "src/sphere.cpp" "src/plane.cpp" "src/triangle.cpp" "src/image.cpp"  "src/camera/orthogonalCamera.cpp" "src/camera/perspectiveCamera.cpp")
+project(rayTracer)
+
+add_executable(${PROJECT_NAME} "main.cpp"   "src/ray.cpp" "src/sphere.cpp" "src/plane.cpp" "src/triangle.cpp" "src/image.cpp"  "src/camera/orthogonalCamera.cpp" "src/camera/perspectiveCamera.cpp")
 
 add_subdirectory(lib)
 
-include_directories(lib lib/lodepng)
+target_include_directories(${PROJECT_NAME} PUBLIC
+	${CMAKE_CURRENT_SOURCE_DIR}/include
+	${CMAKE_CURRENT_SOURCE_DIR}/lib 
+	${CMAKE_CURRENT_SOURCE_DIR}/lib/lodepng
+)
 
 target_link_libraries(rayTracer lodepng)
 

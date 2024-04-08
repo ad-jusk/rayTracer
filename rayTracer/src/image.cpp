@@ -1,4 +1,4 @@
-#include "../include/image.hpp"
+#include "image.hpp"
 
 void PngImage::clearColor(const Vector3& color) {
 	for (int y = 0; y < this->height; y++) {
@@ -31,11 +31,11 @@ void PngImage::colorful6ColumnsBackground() {
 				break;
 			}
 			case 3: {
-				setPixel(y, x, Vector3(0.7, intensity * 0.4f, 0));
+				setPixel(y, x, Vector3(0.7f, intensity * 0.4f, 0));
 				break;
 			}
 			case 4: {
-				setPixel(y, x, Vector3(intensity, 1, intensity * 0.4));
+				setPixel(y, x, Vector3(intensity, 1, intensity * 0.4f));
 				break;
 			}
 			case 5: {

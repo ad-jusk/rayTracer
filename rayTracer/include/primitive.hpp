@@ -1,21 +1,16 @@
 #pragma once
 
 #include "ray.hpp"
+#include "material.hpp"
 
-#define MATH_PI 3.14
+#define MATH_PI 3.14f
 
 struct IntersectionInfo {
 
-	bool hit;
+	bool hit = false;
 	Vector3 point;
-	float distanceFromRayOrigin;
-
-	IntersectionInfo miss() {
-		this->hit = false;
-		this->point = Vector3(0, 0, 0);
-		distanceFromRayOrigin = 0;
-		return *this;
-	}
+	float distanceFromRayOrigin = 0.f;
+	const Primitive* hitPrimitive = nullptr;
 
 	friend std::ostream& operator<<(std::ostream& os, const IntersectionInfo& info) {
 		if (!info.hit) {
@@ -32,9 +27,11 @@ struct IntersectionInfo {
 class Primitive {
 
 public:
-	Vector3 color;
+	Material material;
 
-	Primitive(const Vector3& color) : color(color) {}
+	Primitive(const Material& material) : material(material) {}
 
 	virtual IntersectionInfo getRayIntersection(const Ray& ray) const = 0;
+
+	virtual Vector3 getNormal(const Vector3& point) const = 0;
 };

@@ -13,6 +13,8 @@ public:
 
     Vector3() : x(0), y(0), z(0) {}
 
+    Vector3(float x) : x(x), y(x), z(x) {}
+
     Vector3(float x, float y, float z) : x(x), y(y), z(z) {}
 
     Vector3 operator+(const Vector3& other) const {
@@ -63,6 +65,9 @@ public:
         float dot = x * rhs.x + y * rhs.y + z * rhs.z;
         return acos(dot / (this->length() * rhs.length()));
     }
+    float dot(const Vector3& other) const {
+        return x * other.x + y * other.y + z * other.z;
+    }
 
     Vector3 clamp_0_1() const {
         float x = this->x;
@@ -93,7 +98,7 @@ public:
         
         return c;
     }
-
+ 
     bool operator==(const Vector3& other) const {
         return x == other.x && y == other.y && z == other.z;
     }

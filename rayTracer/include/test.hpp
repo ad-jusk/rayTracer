@@ -75,8 +75,9 @@ void testSphere() {
 
 	std::cout << std::endl << "### SPHERE TESTS ###" << std::endl;
 
+
 	Vector3 sphereCenter(0, 0, 0);
-	Sphere s1(sphereCenter, 10);
+	Sphere s1(sphereCenter, 10, Material());
 
 	Vector3 origin(0, 0, -20);
 	Vector3 direction1(0, 0, 1);
@@ -104,7 +105,7 @@ void testPlane() {
 	Vector3 v2(0, 1, 0);
 	Vector3 v3(0, 1, 1);
 
-	Plane p1(v3, 0);
+	Plane p1(v3, 0, Material());
 
 	std::cout << p1 << std::endl;
 
@@ -125,7 +126,7 @@ void testTriangle() {
 	Vector3 v2(1, 0, 0);
 	Vector3 v3(0, 1, 0);
 
-	Triangle t(v1, v2, v3);
+	Triangle t(v1, v2, v3, Material());
 
 	std::cout << t << std::endl;
 
