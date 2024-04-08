@@ -5,7 +5,8 @@
 class Ray {
 
 private:
-	bool lightBlocked(std::vector<class Primitive*> primitives) const;
+	//bool lightBlocked(std::vector<class Primitive*> primitives) const;
+	bool lightBlocked(std::vector<class Primitive*> primitives, const Primitive* hitPrimitive, float distanceToLight) const;
 
 public:
 	Vector3 origin, direction, target;

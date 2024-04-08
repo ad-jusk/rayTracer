@@ -7,14 +7,14 @@ int main() {
 	
 	// PREPARE PRIMITIVES
 	std::vector<Primitive*> primitives;
-	Primitive* p1 = new Sphere(Vector3(1.5f, 0, 10), 2.f, Material(Vector3(.2f, .4f, .75f)));
-	Primitive* p2 = new Sphere(Vector3(-1.5f, 0.5f, 8), 1.f, Material(Vector3(.8f, .1f, .45f)));
+	Primitive* p1 = new Sphere(Vector3(1.3f, 0, 8), 1.5f, Material(Vector3(.2f, .4f, .75f)));
+	Primitive* p2 = new Sphere(Vector3(-1.0f, 0.5f, 10), 1.f, Material(Vector3(.8f, .1f, .45f)));
 	primitives.push_back(p1);
 	primitives.push_back(p2);
 
 	// PREPARE LIGHTS
 	std::vector<LightSource*> lights;
-	LightSource* l1 = new PointLight(Vector3(2, 0.2f, 4), Vector3(1, 1, 1), 10.f);
+	LightSource* l1 = new PointLight(Vector3(0.5f, -0.8f, 4.5), Vector3(1, 1, 1), 2.f);
 	lights.push_back(l1);
 
 	// RENDER ORTHOGONAL

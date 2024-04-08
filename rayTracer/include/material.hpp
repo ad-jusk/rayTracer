@@ -14,7 +14,7 @@ public:
 		const Vector3& diffuseColor = Vector3(1),
 		const Vector3& reflectColor = Vector3(1),
 		const Vector3& specularColor = Vector3(1),
-		const float specularExponent = 1.f,
+		const float specularExponent = 2.f,
 		const float mirrorReflection = 1.f,
 		const float diffuseReflection = 1.f
 		) : color(color), ambientColor(ambientColor), diffuseColor(diffuseColor), specularColor(specularColor),

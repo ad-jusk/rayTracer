@@ -1,5 +1,6 @@
-#include "primitive.hpp"
+﻿#include "primitive.hpp"
 #include "light/lightSource.hpp"
+#include <algorithm>
 
 Ray::Ray(const Vector3& origin, const Vector3& direction, const Vector3& target, bool directionFromTarget, float length) {
 
@@ -106,59 +107,103 @@ IntersectionInfo Ray::getPixelHit(std::vector<Primitive*> primitives) const {
     return closest;
 }
 
+Vector3 reflect(const Vector3& incident, const Vector3& normal) {
+    return incident - normal * 2 * incident.dot(normal);
+}
+
+//Phong Reflection Model Equation :
+/*
+     I = k_a * I_a + k_d * (N ⋅ L) * I_d + k_s * (R ⋅ V)^n * I_s
+
+     Where:
+     I   : Intensity of the pixel.
+     I_a : Intensity of the ambient light.
+     I_d : Intensity of the diffuse light.
+     I_s : Intensity of the specular light.
+     (they are all equal to intensity of the light source we have done for this raytracer)
+
+     k_a : Ambient reflection coefficient.
+     k_d : Diffuse reflection coefficient.
+     k_s : Specular reflection coefficient.
+
+     N   : Normal vector at the point of intersection.
+     L   : Unit vector in the direction of the light source.
+     R   : Reflection vector.
+     V   : Unit vector towards the viewer.
+
+     n   : Shininess factor, representing the specular exponent.
+*/
 Vector3* Ray::getPixelColor(std::vector<Primitive*> primitives, const std::vector<LightSource*> lights) const {
 
     IntersectionInfo info = this->getPixelHit(primitives);
 
-    float r, g, b;
-    
-    // AMBIENT LIGHT
-    r = g = b = 0.2f;
+    float ambientIntensity = 0.2f;
+    Vector3 ambientColor(ambientIntensity, ambientIntensity, ambientIntensity);
 
     if (!info.hit) {
         return nullptr;
     }
 
+    float r = ambientColor.x;
+    float g = ambientColor.y;
+    float b = ambientColor.z;
+
     for (LightSource* l : lights) {
-
         const float distance = info.point.distance(l->position);
-        Ray ray = Ray(info.point, Vector3(), l->position, true);
+        Vector3 lightDirection = (l->position - info.point).normalize();
 
-        if (ray.lightBlocked(primitives)) {
-            continue;
+        // Create shadow ray towards the light source
+        Ray shadowRay(info.point, lightDirection, Vector3(), false, distance);
+
+        if (!shadowRay.lightBlocked(primitives, info.hitPrimitive, distance)) {
+            Vector3 normal = info.hitPrimitive->getNormal(info.point).normalize();
+            Vector3 viewDirection = (this->origin - info.point).normalize();
+            Vector3 reflectionDirection = reflect(-lightDirection, normal).normalize();
+
+            // Diffuse shading
+            // Diffuse Reflection : I_l * k_d * (N.L)
+
+            float diffuseFactor = std::max(0.0f, lightDirection.dot(normal));
+            Vector3 diffuseColor = info.hitPrimitive->material.diffuseColor * diffuseFactor;
+
+            // Specular shading
+            // Specular Reflection : I_l * k_s * (R.V) ^ n
+
+            float specularFactor = std::pow(std::max(0.0f, viewDirection.dot(reflectionDirection)), info.hitPrimitive->material.specularExponent);
+            Vector3 specularColor = info.hitPrimitive->material.specularColor * specularFactor;
+
+            /* 
+             final_color = ambient_color + diffuse_color + specular_color 
+             ( ambient_color is realtively r,g,b since they are equal to ambient_color x,y,z )
+             l->intensity is the I_l we didnt multiply the colors by before
+
+             The attenuation factor, 1 / (distance ^ 2), represents the inverse square law
+             of light attenuation with distance, although it's not explicitly part of the Phong equation.
+             It's used to attenuate the intensity of the light based on the distance between the light source and the surface point.  
+            */
+            r += (diffuseColor.x + specularColor.x) * l->intensity / (distance * distance);
+            g += (diffuseColor.y + specularColor.y) * l->intensity / (distance * distance);
+            b += (diffuseColor.z + specularColor.z) * l->intensity / (distance * distance);
         }
-
-        Vector3 normal = info.hitPrimitive->getNormal(info.point).normalize();
-        Vector3 direction = ray.direction.normalize();
-        float fallof = std::fabs(normal * direction / (normal.length() * direction.length()));
-        
-        float i = l->intensity * fallof / (distance * distance);
-        i = std::min(i, 1.f);
-
-        Vector3 reflection = -ray.direction - normal * (-ray.direction * normal) * 2;
-        float intensity = -i * std::pow(info.hitPrimitive->material.mirrorReflection * (direction * normal) + info.hitPrimitive->material.diffuseReflection * (reflection * -this->direction), info.hitPrimitive->material.specularExponent);
-        intensity = std::min(intensity, 1.f);
-
-        r += l->color.x * intensity;
-        g += l->color.y * intensity;
-        b += l->color.z * intensity;
     }
 
-    float final_r = info.hitPrimitive->material.color.x * r;
-    float final_g = info.hitPrimitive->material.color.y * g;
-    float final_b = info.hitPrimitive->material.color.z * b;
-    
-    return new Vector3(final_r, final_g, final_b);
+    r *= info.hitPrimitive->material.color.x;
+    g *= info.hitPrimitive->material.color.y;
+    b *= info.hitPrimitive->material.color.z;
+
+    Vector3* finalColor = new Vector3(r, g, b);
+    *finalColor = finalColor->clamp_0_1();
+
+    return finalColor;
 }
 
-bool Ray::lightBlocked(std::vector<class Primitive*> primitives) const {
-    // TODO: THIS HAS TO RETURN FALSE IF ONE PRIMITIVE 
-    // IS SHADOWED BY ANOTHER
+bool Ray::lightBlocked(std::vector<class Primitive*> primitives, const Primitive* hitPrimitive, float distanceToLight) const {
     for (Primitive* p : primitives) {
+        if (p == hitPrimitive) continue; // Skip the object that was hit
         IntersectionInfo info = p->getRayIntersection(*this);
-        if (info.hit) {
-            return false;
+        if (info.hit && info.distanceFromRayOrigin < distanceToLight) {
+            return true;
         }
     }
-    return true;
+    return false;
 }
