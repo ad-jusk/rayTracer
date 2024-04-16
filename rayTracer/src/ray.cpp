@@ -2,28 +2,54 @@
 #include "light/lightSource.hpp"
 #include <algorithm>
 
-Ray::Ray(const Vector3& origin, const Vector3& direction, const Vector3& target, bool directionFromTarget, float length) {
+//Ray::Ray(const Vector3& origin, const Vector3& direction, const Vector3& target, bool directionFromTarget, float length) {
+//
+//	this->origin = origin;
+//	this->length = length;
+//    this->medium = medium;
+//
+//	if (directionFromTarget) {
+//		// CALCULATE DIRECTION FROM TARGET
+//		if (target == origin) {
+//			throw std::invalid_argument("Ray cannot have equal origin and target");
+//		}
+//		this->target = target;
+//		this->direction = this->origin - target;
+//		this->direction = this->direction.normalize();
+//	}
+//	else {
+//		// CALCULATE TARGET FROM DIRECTION
+//		if (direction == Vector3()) {
+//			throw std::invalid_argument("Ray direction vector cannot be (0, 0, 0)");
+//		}
+//		this->direction = direction.normalize();
+//		this->target = this->origin + this->direction;
+//	}
+//}
 
-	this->origin = origin;
-	this->length = length;
+Ray::Ray(const Vector3& origin, const Vector3& direction, const Vector3& target, bool directionFromTarget, float length, const Material& medium)
+{
+    this->origin = origin;
+    this->length = length;
+    this->medium = &medium;
 
-	if (directionFromTarget) {
-		// CALCULATE DIRECTION FROM TARGET
-		if (target == origin) {
-			throw std::invalid_argument("Ray cannot have equal origin and target");
-		}
-		this->target = target;
-		this->direction = this->origin - target;
-		this->direction = this->direction.normalize();
-	}
-	else {
-		// CALCULATE TARGET FROM DIRECTION
-		if (direction == Vector3()) {
-			throw std::invalid_argument("Ray direction vector cannot be (0, 0, 0)");
-		}
-		this->direction = direction.normalize();
-		this->target = this->origin + this->direction;
-	}
+    if (directionFromTarget) {
+        // CALCULATE DIRECTION FROM TARGET
+        if (target == origin) {
+            throw std::invalid_argument("Ray cannot have equal origin and target");
+        }
+        this->target = target;
+        this->direction = this->origin - target;
+        this->direction = this->direction.normalize();
+    }
+    else {
+        // CALCULATE TARGET FROM DIRECTION
+        if (direction == Vector3()) {
+            throw std::invalid_argument("Ray direction vector cannot be (0, 0, 0)");
+        }
+        this->direction = direction.normalize();
+        this->target = this->origin + this->direction;
+    }
 }
 
 bool Ray::isPointOnRay(Vector3& point) {
@@ -107,10 +133,37 @@ IntersectionInfo Ray::getPixelHit(std::vector<Primitive*> primitives) const {
     return closest;
 }
 
+
 Vector3 reflect(const Vector3& incident, const Vector3& normal) {
     return incident - normal * 2 * incident.dot(normal);
 }
 
+Vector3 refract(const Vector3& incident, const Vector3& normal, float etai, float etat) {
+    float cosi = -std::clamp(incident.dot(normal), -1.0f, 1.0f);
+    float eta = etai / etat;
+    float k = 1 - eta * eta * (1 - cosi * cosi);
+
+    if (k < 0.0f) {
+        // Total internal reflection
+        return Vector3(0, 0, 0);
+    }
+    else {
+        return incident * eta - normal * (eta * cosi - sqrtf(k));
+    }
+}
+// Calculate Fresnel effect
+float fresnel(const Vector3& incident, const Vector3& normal, float etai, float etat) {
+    float cosi = -std::clamp(incident.dot(normal), -1.0f, 1.0f);
+    float sint2 = etai * etai * (1.0f - cosi * cosi) / (etat * etat);
+    if (sint2 > 1.0f) {
+        // Total internal reflection
+        return 1.0f;
+    }
+    float cost = sqrtf(1.0f - sint2);
+    float r0 = (etat - etai) / (etat + etai);
+    r0 = r0 * r0;
+    return r0 + (1.0f - r0) * powf(1.0f - cosi, 5.0f);
+}
 //Phong Reflection Model Equation :
 /*
      I = k_a * I_a + k_d * (N ⋅ L) * I_d + k_s * (R ⋅ V)^n * I_s
@@ -133,20 +186,25 @@ Vector3 reflect(const Vector3& incident, const Vector3& normal) {
 
      n   : Shininess factor, representing the specular exponent.
 */
-Vector3* Ray::getPixelColor(std::vector<Primitive*> primitives, const std::vector<LightSource*> lights) const {
+Vector3* Ray::getPixelColor(std::vector<Primitive*> primitives, const std::vector<LightSource*> lights, int recursionNumber) const {
+    const int recursionLimit = 6;
+    if (recursionNumber >= recursionLimit) {
+        return nullptr;
+    }
 
     IntersectionInfo info = this->getPixelHit(primitives);
 
-    float ambientIntensity = 0.2f;
+    float ambientIntensity = 0.3f;
     Vector3 ambientColor(ambientIntensity, ambientIntensity, ambientIntensity);
 
     if (!info.hit) {
         return nullptr;
     }
 
-    float r = ambientColor.x;
-    float g = ambientColor.y;
-    float b = ambientColor.z;
+    float r = info.hitPrimitive->material.ambientColor.x;
+    float g = info.hitPrimitive->material.ambientColor.y;
+    float b = info.hitPrimitive->material.ambientColor.z;
+
 
     for (LightSource* l : lights) {
         const float distance = info.point.distance(l->position);
@@ -184,19 +242,83 @@ Vector3* Ray::getPixelColor(std::vector<Primitive*> primitives, const std::vecto
             r += (diffuseColor.x + specularColor.x) * l->intensity / (distance * distance);
             g += (diffuseColor.y + specularColor.y) * l->intensity / (distance * distance);
             b += (diffuseColor.z + specularColor.z) * l->intensity / (distance * distance);
+
+
+        }
+    }
+    r = r * info.hitPrimitive->material.color.x;
+    g = g * info.hitPrimitive->material.color.y;
+    b = b * info.hitPrimitive->material.color.z;
+
+    // Reflection
+    if (info.hitPrimitive->material.materialType == MaterialType::Reflective && recursionNumber < recursionLimit) {
+        Vector3 reflectionDirection = reflect(this->direction, info.hitPrimitive->getNormal(info.point)).normalize();
+        // Offset the origin to avoid self-intersection
+        Ray reflectedRay(info.point + reflectionDirection * 1e-4, reflectionDirection, Vector3(), false, std::numeric_limits<float>::max(), info.hitPrimitive->material);
+        Vector3* reflectedColor = reflectedRay.getPixelColor(primitives, lights, recursionNumber + 1);
+        
+        if (reflectedColor != nullptr) {
+            r += (*reflectedColor).x;
+            g += (*reflectedColor).y;
+            b += (*reflectedColor).z;
+            delete reflectedColor;
         }
     }
 
-    r *= info.hitPrimitive->material.color.x;
-    g *= info.hitPrimitive->material.color.y;
-    b *= info.hitPrimitive->material.color.z;
+    // Refraction
+    else if (info.hitPrimitive->material.materialType == MaterialType::Refractive && recursionNumber < recursionLimit) {
+        float etai = this->getMediumRefractionIndex(); 
+        float etat = info.hitPrimitive->material.indexOfRefraction; 
+        Vector3 normal = info.hitPrimitive->getNormal(info.point).normalize();
+        Vector3 incident = -this->direction.normalize();
+
+        if (etat <= 0.0f) {
+            std::cerr << "Invalid index of refraction." << std::endl;
+            return nullptr;
+        }
+
+        if (incident.dot(normal) < 0) { // If the ray is outside the object
+            normal = -normal; // Invert the normal
+        }
+        else {
+            std::swap(etai, etat); // Swap the indices
+        }
+        float fr = fresnel(incident, normal, etai, etat);
+        Vector3 reflectedDirection = reflect(incident, normal).normalize();
+        Vector3 refractedDirection = refract(incident, normal, etai, etat);
+
+        // Use fr to blend between the reflected and refracted directions
+        Vector3 direction = reflectedDirection * fr + refractedDirection * (1.0f - fr);
+
+        // Offset the origin to avoid self-intersection
+        Vector3 refractedOrigin = info.point + direction * 1e-4;
+
+        // Pass the current material as the new medium for the refracted ray
+        Ray refractedRay(refractedOrigin, direction, Vector3(), false, std::numeric_limits<float>::max(), info.hitPrimitive->material);
+        Vector3* refractedColor = refractedRay.getPixelColor(primitives, lights, recursionNumber + 1);
+        
+        if (refractedColor != nullptr) {
+            r += (*refractedColor).x;
+            g += (*refractedColor).y;
+            b += (*refractedColor).z;
+            delete refractedColor;
+        }
+    }
 
     Vector3* finalColor = new Vector3(r, g, b);
     *finalColor = finalColor->clamp_0_1();
-
+    
     return finalColor;
 }
 
+float Ray::getMediumRefractionIndex() const {
+    if (medium == nullptr) {
+        return 1.0f; // Air or vacuum
+    }
+    else {
+        return medium->indexOfRefraction;
+    }
+}
 bool Ray::lightBlocked(std::vector<class Primitive*> primitives, const Primitive* hitPrimitive, float distanceToLight) const {
     for (Primitive* p : primitives) {
         if (p == hitPrimitive) continue; // Skip the object that was hit

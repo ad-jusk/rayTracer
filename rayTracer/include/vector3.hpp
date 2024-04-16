@@ -119,4 +119,20 @@ public:
         os << "[" << vec.x << ", " << vec.y << ", " << vec.z << "]";
         return os;
     }
+
+
 };
+
+//static Vector3 refract(const Vector3& incident, const Vector3& normal, float refractiveIndex) {
+//    float cosTheta1 = -normal.dot(incident);
+//    float cosTheta2Squared = 1.0f - refractiveIndex * refractiveIndex * (1.0f - cosTheta1 * cosTheta1);
+//
+//    // Total internal reflection
+//    if (cosTheta2Squared < 0.0f) {
+//        return Vector3(0.0f, 0.0f, 0.0f); // Return black (no refraction)
+//    }
+//
+//    float cosTheta2 = sqrt(cosTheta2Squared);
+//
+//    return incident * refractiveIndex + normal * (refractiveIndex * cosTheta1 - cosTheta2);
+//}

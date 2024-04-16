@@ -1,6 +1,6 @@
 #include "../include/plane.hpp"
 
-Plane::Plane(Vector3& normal, float d, const Material& material) : Primitive(material) {
+Plane::Plane(const Vector3& normal, float d, const Material& material) : Primitive(material) {
 	this->normalVector = normal;
 	this->a = normal.x;
 	this->b = normal.y;
