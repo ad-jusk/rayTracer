@@ -2,30 +2,6 @@
 #include "light/lightSource.hpp"
 #include <algorithm>
 
-//Ray::Ray(const Vector3& origin, const Vector3& direction, const Vector3& target, bool directionFromTarget, float length) {
-//
-//	this->origin = origin;
-//	this->length = length;
-//    this->medium = medium;
-//
-//	if (directionFromTarget) {
-//		// CALCULATE DIRECTION FROM TARGET
-//		if (target == origin) {
-//			throw std::invalid_argument("Ray cannot have equal origin and target");
-//		}
-//		this->target = target;
-//		this->direction = this->origin - target;
-//		this->direction = this->direction.normalize();
-//	}
-//	else {
-//		// CALCULATE TARGET FROM DIRECTION
-//		if (direction == Vector3()) {
-//			throw std::invalid_argument("Ray direction vector cannot be (0, 0, 0)");
-//		}
-//		this->direction = direction.normalize();
-//		this->target = this->origin + this->direction;
-//	}
-//}
 
 Ray::Ray(const Vector3& origin, const Vector3& direction, const Vector3& target, bool directionFromTarget, float length, const Material& medium)
 {
@@ -138,19 +114,6 @@ Vector3 reflect(const Vector3& incident, const Vector3& normal) {
     return incident - normal * 2 * incident.dot(normal);
 }
 
-//Vector3 refract(const Vector3& incident, const Vector3& normal, float etai, float etat) {
-//    float cosi = -std::clamp(incident.dot(normal), -1.0f, 1.0f);
-//    float eta = etai / etat;
-//    float k = 1 - eta * eta * (1 - cosi * cosi);
-//
-//    if (k < 0.0f) {
-//        // Total internal reflection
-//        return Vector3(0, 0, 0);
-//    }
-//    else {
-//        return incident * eta - normal * (eta * cosi - sqrtf(k));
-//    }
-//}
 Vector3 refract(const Vector3& incident, const Vector3& normal, float indexOfRefraction) {
     float cosi = -std::max(-1.f, std::min(1.f, incident.dot(normal)));
     float etai = 1, etat = indexOfRefraction;
@@ -284,45 +247,8 @@ Vector3* Ray::getPixelColor(std::vector<Primitive*> primitives, const std::vecto
         }
     }
 
-    //// Refraction
-    //else if (info.hitPrimitive->material.materialType == MaterialType::Refractive ) {
-    //    float etai = this->getMediumRefractionIndex(); 
-    //    float etat = info.hitPrimitive->material.indexOfRefraction; 
-    //    Vector3 normal = info.hitPrimitive->getNormal(info.point).normalize();
-    //    Vector3 incident = -this->direction.normalize();
-    //
-    //    if (etat <= 0.0f) {
-    //        std::cerr << "Invalid index of refraction." << std::endl;
-    //        return nullptr;
-    //    }
-    //
-    //    if (incident.dot(normal) < 0) { // If the ray is outside the object
-    //        normal = -normal; // Invert the normal
-    //    }
-    //    else {
-    //        std::swap(etai, etat); // Swap the indices
-    //    }
-    //    float fr = fresnel(incident, normal, etai, etat);
-    //    Vector3 reflectedDirection = reflect(incident, normal).normalize();
-    //    Vector3 refractedDirection = refract(incident, normal, etai);
-    //
-    //    // Use fr to blend between the reflected and refracted directions
-    //    Vector3 direction = reflectedDirection * fr + refractedDirection * (1.0f - fr);
-    //
-    //    // Offset the origin to avoid self-intersection
-    //    Vector3 refractedOrigin = info.point + direction * 1e-4;
-    //
-    //    // Pass the current material as the new medium for the refracted ray
-    //    Ray refractedRay(refractedOrigin, direction, Vector3(), false, std::numeric_limits<float>::max(), info.hitPrimitive->material);
-    //    Vector3* refractedColor = refractedRay.getPixelColor(primitives, lights, recursionNumber + 1);
-    //    
-    //    if (refractedColor != nullptr) {
-    //        r += (*refractedColor).x;
-    //        g += (*refractedColor).y;
-    //        b += (*refractedColor).z;
-    //        delete refractedColor;
-    //    }
-    //}
+    //// Refractio
+
         // Refraction
     if (info.hitPrimitive->material.materialType == MaterialType::Refractive && recursionNumber < recursionLimit) {
         float eta = info.hitPrimitive->material.indexOfRefraction; // Index of refraction of the material
