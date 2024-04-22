@@ -29,7 +29,7 @@ public:
 		const float specularExponent = 2.f,
 		const float mirrorReflection = 1.f,		
 		const float diffuseReflection = 1.f,
-		const float indexOfRefraction = 1.f 
+		const float indexOfRefraction = 10.5f 
 		) : materialType(materialType), color(color), ambientColor(ambientColor), diffuseColor(diffuseColor), specularColor(specularColor),
 		specularExponent(specularExponent), mirrorReflection(mirrorReflection), diffuseReflection(diffuseReflection), indexOfRefraction(indexOfRefraction)
 	{}

@@ -40,7 +40,7 @@ int main() {
 
 	// RENDER PERSPECTIVE
 	PerspectiveCamera camera(Vector3(0, 0, 0), Vector3(0, 0, 1), 500, 500, 40);
-	camera.renderScene(primitives, lights, true);
+	camera.renderScene(primitives, lights, false);
 
 	// DELETE ALLOCATED PRIMITIVES
 	for (Primitive* p : primitives) {
