@@ -247,11 +247,9 @@ Vector3* Ray::getPixelColor(std::vector<Primitive*> primitives, const std::vecto
         }
     }
 
-    //// Refractio
-
-        // Refraction
+    // Refraction
     if (info.hitPrimitive->material.materialType == MaterialType::Refractive && recursionNumber < recursionLimit) {
-        float eta = info.hitPrimitive->material.indexOfRefraction; // Index of refraction of the material
+        float eta = this->getMediumRefractionIndex(); // Index of refraction of the material
         Vector3 normal = info.hitPrimitive->getNormal(info.point).normalize();
         Vector3 incident = this->direction.normalize();
 
@@ -281,8 +279,6 @@ Vector3* Ray::getPixelColor(std::vector<Primitive*> primitives, const std::vecto
             Vector3 refractedDirection = incident * etaRatio +n * (etaRatio * cosi - sqrtf(k));
             refractedDirection.normalize();
 
-            // Debugging output
-            //std::cout << "Refracted Direction: " << refractedDirection << std::endl;
             Vector3 refractedOrigin = info.point + refractedDirection * 1e-4;
 
             Ray refractedRay(refractedOrigin, refractedDirection * 1e-4, Vector3(), false, std::numeric_limits<float>::max(), info.hitPrimitive->material);
