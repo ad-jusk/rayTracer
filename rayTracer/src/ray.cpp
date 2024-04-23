@@ -114,27 +114,6 @@ Vector3 reflect(const Vector3& incident, const Vector3& normal) {
     return incident - normal * 2 * incident.dot(normal);
 }
 
-Vector3 refract(const Vector3& incident, const Vector3& normal, float indexOfRefraction) {
-    float cosi = -std::max(-1.f, std::min(1.f, incident.dot(normal)));
-    float etai = 1, etat = indexOfRefraction;
-    Vector3 n = normal;
-    if (cosi < 0) {
-        cosi = -cosi;
-    }
-    else {
-        std::swap(etai, etat);
-        n = -normal;
-    }
-    float eta = etai / etat;
-    float k = 1 - eta * eta * (1 - cosi * cosi);
-    if (k < 0) {
-        return Vector3(0, 0, 0); // Total internal reflection
-    }
-    else {
-        Vector3 refractedDirection = incident * eta - n * (eta * cosi - sqrtf(k));
-        return refractedDirection.normalize(); // Normalize the refracted direction before returning
-    }
-}
 // Calculate Fresnel effect
 float fresnel(const Vector3& incident, const Vector3& normal, float etai, float etat) {
     float cosi = -std::clamp(incident.dot(normal), -1.0f, 1.0f);

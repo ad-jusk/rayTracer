@@ -159,7 +159,7 @@ void PerspectiveCamera::renderScene(std::vector<Primitive*> primitives, std::vec
 				Vector3 direction;
 				Ray ray = Ray(this->position, direction, rayTarget, true);
 				Vector3 bgColor = image.getPixelColor(y, x);
-				Vector3 color = adaptiveAntialiasing(ray, cornerA, cornerB, cornerC, cornerD, rayTarget, 0, 2, pixelX / 2, pixelY / 2, bgColor, primitives, lights);
+				Vector3 color = adaptiveAntialiasing(ray, cornerA, cornerB, cornerC, cornerD, rayTarget, 0, 1, pixelX / 2, pixelY / 2, bgColor, primitives, lights);
 				image.setPixel(y, x, color);
 			}
 			else {
