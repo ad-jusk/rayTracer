@@ -1,0 +1,1 @@
+add_library(lodepng "lodepng/lodepng.cpp" "lodepng/lodepng.h")
