@@ -1,6 +1,6 @@
 project(rayTracer)
 
-add_executable(${PROJECT_NAME} "main.cpp"   "src/ray.cpp" "src/sphere.cpp" "src/plane.cpp" "src/triangle.cpp" "src/image.cpp"  "src/camera/orthogonalCamera.cpp" "src/camera/perspectiveCamera.cpp")
+add_executable(${PROJECT_NAME} "main.cpp"   "src/ray.cpp" "src/sphere.cpp" "src/plane.cpp" "src/triangle.cpp" "src/image.cpp"  "src/camera/orthogonalCamera.cpp" "src/camera/perspectiveCamera.cpp" "include/light/SpotLight.h")
 
 add_subdirectory(lib)
 

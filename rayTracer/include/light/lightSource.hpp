@@ -15,4 +15,9 @@ public:
 		os << "Light source: position: " << l.position << ", color: " << l.color << ", intensity: " << l.intensity;
 		return os;
 	}
+	virtual ~LightSource() {}
+
+	// Add a virtual function (can be a pure virtual function)
+	virtual void dummyFunction() {} // This function is just to make the class polymorphic
+
 };

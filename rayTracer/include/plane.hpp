@@ -10,7 +10,7 @@ public:
 	Vector3 normalVector;
 	float a, b, c, d;
 
-	Plane(Vector3& normal, float d, const Material& material);
+	Plane(const Vector3& normal, float d, const Material& material);
 
 	virtual IntersectionInfo getRayIntersection(const Ray& ray) const override;
 
